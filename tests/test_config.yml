@@ -1,0 +1,18 @@
+assetic:
+  debug: true
+  filter:
+    global:
+      jsmin: '\\Assetic\\Filter\\JSMinFilter'
+    typed:
+      # conditional on file extension
+      scss: '\\Assetic\\Filter\\ScssphpFilter'
+      coffee: '\\Assetic\\Filter\\CoffeeScriptFilter'
+      twig:
+        class: 'todo'
+  preprocessor:
+    statements:
+      # preprocessor statement regex for asset types
+      scss: '|^\s*//=\s*(.*)$|'
+      css: '|^\s*\*=\s*(.*)$|'
+      js: '|^\s*//=\s*(.*)$|'
+      coffee: '|^\s*#=\s*(.*)$|'
