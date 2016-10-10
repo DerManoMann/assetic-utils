@@ -13,15 +13,58 @@ use Assetic\Util\VarUtils;
 
 /**
  * Worker to resolve the file/glob asset source root in case we have multiple relative root dirs.
+ *
+ * The default resolver implementations try to build an absolute filename from root and path and consider a
+ * root directory resolved if the resulting file exists (file) or matches any existing file (glob).
+ *
+ * Signature for the file resolver:
+ *
+ * <code>resolver(AssetInterface $asset, $root)</code>.
+ *
+ * Expected return values are either the full resolved filename or null.
+ *
+ *
+ * Signature for the glob resolver:
+ *
+ * <code>resolver(AssetInterface $asset, $glob, $root)</code>.
+ *
+ * Expected return values are either a final source root value to be used or null.
  */
 class SourceRootResolverWorker implements WorkerInterface {
     protected $root;
+    protected $fileResolver;
+    protected $globResolver;
 
     /**
      * Create worker with the given root dirs.
+     *
+     * @param array List of root directories for relative file sources.
+     * @param callable $fileResolver Custom file resolver.
+     * @param callable $globResolver Custom glob resolver.
      */
-    public function __construct(array $root = []) {
+    public function __construct(array $root = [], $fileResolver = null, $globResolver = null) {
         $this->root = $root;
+        if ($fileResolver && is_callable($fileResolver)) {
+            $this->fileResolver = $fileResolver;
+        } else {
+            $this->fileResolver = function ($asset, $root) {
+                $filename = sprintf('%s/%s', $root, $asset->getSourcePath());
+                if (realpath($filename)) {
+                    return $filename;
+                }
+
+                return null;
+            };
+        }
+        if ($globResolver && is_callable($globResolver)) {
+            $this->globResolver = $globResolver;
+        } else {
+            $this->globResolver = function ($asset, $glob, $root) {
+                $rglob = sprintf('%s/%s', $root, ltrim($glob, '/'));
+
+                return glob($rglob) ? $root : null;
+            };
+        }
     }
 
     /**
@@ -29,10 +72,10 @@ class SourceRootResolverWorker implements WorkerInterface {
      */
     protected function processFileAsset(FileAsset $asset) {
         if (!$asset->getSourceRoot()) {
+            $fileResolver = $this->fileResolver;
             $path = $asset->getSourcePath();
             foreach ($this->root as $root) {
-                $filename = sprintf('%s/%s', $root, $asset->getSourcePath());
-                if (realpath($filename)) {
+                if ($filename = $fileResolver($asset, $root)) {
                     return new FileAsset($filename, $asset->getFilters(), $root, $path);
                 }
             }
@@ -52,20 +95,20 @@ class SourceRootResolverWorker implements WorkerInterface {
                 $rp->setAccessible(true);
                 $globs = $rp->getValue($asset);
 
+                $globResolver = $this->globResolver;
                 $sourceRoot = null;
                 foreach ($globs as $glob) {
                     $glob = VarUtils::resolve($glob, $asset->getVars(), $asset->getValues());
 
-                    // try to find a sourceRoot for first glob
-                    if (!glob($glob)) {
-                        $glob = ltrim($glob, '/');
-                        foreach ($this->root as $root) {
-                            $rglob = sprintf('%s/%s', $root, $glob);
-                            if (glob($rglob)) {
-                                $sourceRoot = $root;
-                                break;
-                            }
+                    foreach ($this->root as $root) {
+                        if ($sourceRoot = $globResolver($asset, $glob, $root)) {
+                            break;
                         }
+                    }
+
+                    if ($sourceRoot) {
+                        // use first resolved
+                        break;
                     }
                 }
 
