@@ -70,13 +70,21 @@ class SourceRootResolverWorker implements WorkerInterface {
     /**
      * Process file asset.
      */
-    protected function processFileAsset(FileAsset $asset) {
+    protected function processFileAsset(FileAsset $asset, AssetFactory $factory) {
         if (!$asset->getSourceRoot()) {
             $fileResolver = $this->fileResolver;
             $path = $asset->getSourcePath();
             foreach ($this->root as $root) {
                 if ($filename = $fileResolver($asset, $root)) {
-                    return new FileAsset($filename, $asset->getFilters(), $root, $path);
+                    $asset = $factory->createAsset(
+                        $filename,
+                        $asset->getFilters(),
+                        [
+                            'root' => $root,
+                        ]
+                    );
+                    return $asset;
+                    //return new FileAsset($filename, $asset->getFilters(), $root, $path);
                 }
             }
         }
@@ -87,7 +95,7 @@ class SourceRootResolverWorker implements WorkerInterface {
     /**
      * Process glob asset.
      */
-    protected function processGlobAsset(GlobAsset $asset) {
+    protected function processGlobAsset(GlobAsset $asset, AssetFactory $factory) {
         if (!$asset->getSourceRoot()) {
             // access globs without initializing the asset....
             $rc = new ReflectionClass($asset);
@@ -113,11 +121,20 @@ class SourceRootResolverWorker implements WorkerInterface {
                 }
 
                 if ($sourceRoot) {
+                    return $factory->createAsset(
+                        array_map(function ($glob) use ($sourceRoot) { return sprintf('%s/%s', $sourceRoot, ltrim($glob, '/')); }, $globs),
+                        $asset->getFilters(),
+                        [
+                            'root' => $sourceRoot,
+                        ]
+                    );
+                    /*
                     return new GlobAsset(
                         array_map(function ($glob) use ($sourceRoot) { return sprintf('%s/%s', $sourceRoot, ltrim($glob, '/')); }, $globs),
                         $asset->getFilters(),
                         $sourceRoot
                     );
+                    */
                 }
             }
         }
@@ -128,11 +145,11 @@ class SourceRootResolverWorker implements WorkerInterface {
     /**
      * Process asset.
      */
-    protected function processAsset(AssetInterface $asset) {
+    protected function processAsset(AssetInterface $asset, AssetFactory $factory) {
         if ($asset instanceof FileAsset) {
-            return $this->processFileAsset($asset);
+            return $this->processFileAsset($asset, $factory);
         } elseif ($asset instanceof GlobAsset) {
-            return $this->processGlobAsset($asset);
+            return $this->processGlobAsset($asset, $factory);
         }
 
         return null;
@@ -148,7 +165,7 @@ class SourceRootResolverWorker implements WorkerInterface {
 
             // need to look into this to be able to grab GlobAssets before they are resolved
             foreach ($asset->all() as $leaf) {
-                if ($processed = $this->processAsset($leaf)) {
+                if ($processed = $this->processAsset($leaf, $factory)) {
                     $collection->add($processed);
                     $changed = true;
                 } else {
@@ -159,6 +176,6 @@ class SourceRootResolverWorker implements WorkerInterface {
             return $changed ? $collection : null;
         }
 
-        return $this->processAsset($asset);
+        return $this->processAsset($asset, $factory);
     }
 }

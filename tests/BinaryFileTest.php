@@ -16,7 +16,7 @@ class BinaryFileTest extends AsseticTestCase
      */
     public function testWrite()
     {
-        $resource = 'sub1/img/bruce.png';
+        $resource = 'core/img/bruce.png';
         $factory = $this->getFactory($defaultRoot = __DIR__.'/assets', [new PreprocessorWorker($this->getAssetPreprocessor())]);
 
         $asset = $factory->createAsset($resource);

@@ -17,8 +17,8 @@ class PreprocessorWorkerTest extends AsseticTestCase
     {
         $factory = $this->getFactory($defaultRoot = __DIR__.'/assets', [new PreprocessorWorker($this->getAssetPreprocessor())]);
 
-        $asset = $factory->createAsset('sub1/js/require.js');
+        $asset = $factory->createAsset('core/js/require.js');
         $this->assertTrue($asset instanceof AssetCollection);
-        $this->assertAssetSources(['sub1/js/standalone.js', 'sub1/js/require.js'], $asset);
+        $this->assertAssetSources(['core/js/standalone.js', 'core/js/require.js'], $asset);
     }
 }

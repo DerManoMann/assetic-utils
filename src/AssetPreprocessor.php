@@ -49,7 +49,12 @@ class AssetPreprocessor
             return null;
         }
 
-        $asset->load();
+        try {
+            $asset->load();
+        } catch (RuntimeException $e) {
+            // happens when the source root resolver kicks in - then the replaced leaf is still pushed through the other workers
+            return null;
+        }
 
         $lines = [];
         $statements = [];
@@ -133,6 +138,7 @@ class AssetPreprocessor
 
                 case 'require_self':
                     $collection->add($asset);
+                case 'skip_self':
                     $addedSelf = true;
                     break;
                 }

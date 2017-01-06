@@ -15,7 +15,7 @@ class AssetPreprocessorTest extends AsseticTestCase
      */
     public function testNoStatements()
     {
-        $resource = 'sub1/js/standalone.js';
+        $resource = 'core/js/standalone.js';
         $factory = $this->getFactory($defaultRoot = __DIR__.'/assets');
         $asset = $factory->createAsset($resource);
         $asset = $this->expectSingleAsset($asset);
@@ -30,7 +30,7 @@ class AssetPreprocessorTest extends AsseticTestCase
      */
     public function testRequireSingle()
     {
-        $resource = 'sub1/js/require.js';
+        $resource = 'core/js/require.js';
         $factory = $this->getFactory($defaultRoot = __DIR__.'/assets');
         $asset = new FileAsset(sprintf('%s/%s', $defaultRoot, $resource), [], $defaultRoot, $resource, []);
 
@@ -39,7 +39,7 @@ class AssetPreprocessorTest extends AsseticTestCase
         $result = $preprocessor->process($asset, $factory);
         $this->assertNotNull($result);
         $this->assertTrue($result instanceof AssetCollection);
-        $this->assertAssetSources(['sub1/js/standalone.js', 'sub1/js/require.js'], $result);
+        $this->assertAssetSources(['core/js/standalone.js', 'core/js/require.js'], $result);
     }
 
     /**
@@ -47,7 +47,7 @@ class AssetPreprocessorTest extends AsseticTestCase
      */
     public function testRequireSelf($factory)
     {
-        $resource = 'sub1/js/require_self.js';
+        $resource = 'core/js/require_self.js';
         $defaultRoot = __DIR__.'/assets';
         $asset = new FileAsset(sprintf('%s/%s', $defaultRoot, $resource), [], $defaultRoot, $resource, []);
 
@@ -56,7 +56,7 @@ class AssetPreprocessorTest extends AsseticTestCase
         $result = $preprocessor->process($asset, $factory);
         $this->assertNotNull($result);
         $this->assertTrue($result instanceof AssetCollection);
-        $this->assertAssetSources(['sub1/js/require_self.js'], $result);
+        $this->assertAssetSources(['core/js/require_self.js'], $result);
     }
 
     /**
@@ -64,7 +64,7 @@ class AssetPreprocessorTest extends AsseticTestCase
      */
     public function testRequireMulti($factory)
     {
-        $resource = 'sub1/js/require_multi.js';
+        $resource = 'core/js/require_multi.js';
         $defaultRoot = __DIR__.'/assets';
         $asset = new FileAsset(sprintf('%s/%s', $defaultRoot, $resource), [], $defaultRoot, $resource, []);
 
@@ -74,7 +74,7 @@ class AssetPreprocessorTest extends AsseticTestCase
         $this->assertNotNull($result);
         $this->assertTrue($result instanceof AssetCollection);
 
-        $this->assertAssetSources(['sub1/js/standalone.js', 'sub1/js/require_multi.js', 'sub1/js/static.js'], $result);
+        $this->assertAssetSources(['core/js/standalone.js', 'core/js/require_multi.js', 'core/js/static.js'], $result);
 
         $expectedContent = implode("\n\n", ["var standalone = 'standalone';", "var multi = 'multi';", "var name = 'static';"]) . "\n";
         $this->assertEquals($expectedContent, $result->dump());
@@ -85,7 +85,7 @@ class AssetPreprocessorTest extends AsseticTestCase
      */
     public function testRequireTree($factory)
     {
-        $resource = 'sub1/js/require_tree.js';
+        $resource = 'core/js/require_tree.js';
         $defaultRoot = __DIR__.'/assets';
         $asset = new FileAsset(sprintf('%s/%s', $defaultRoot, $resource), [], $defaultRoot, $resource, []);
 
@@ -95,7 +95,7 @@ class AssetPreprocessorTest extends AsseticTestCase
         $this->assertNotNull($result);
         $this->assertTrue($result instanceof AssetCollection);
 
-        $this->assertAssetSources(['sub2/js/tree/sub2tree21.js', 'sub2/js/tree/sub2tree22.js', 'sub1/js/require_tree.js'], $result);
+        $this->assertAssetSources(['other/js/tree/sub2tree21.js', 'other/js/tree/sub2tree22.js', 'core/js/require_tree.js'], $result);
         // ensure everything loads
         $result->dump();
     }
@@ -105,7 +105,7 @@ class AssetPreprocessorTest extends AsseticTestCase
      */
     public function testRequireWildcard($factory)
     {
-        $resource = 'sub1/js/require_wildcard.js';
+        $resource = 'core/js/require_wildcard.js';
         $defaultRoot = __DIR__.'/assets';
         $asset = new FileAsset(sprintf('%s/%s', $defaultRoot, $resource), [], $defaultRoot, $resource, []);
 
@@ -115,7 +115,7 @@ class AssetPreprocessorTest extends AsseticTestCase
         $this->assertNotNull($result);
         $this->assertTrue($result instanceof AssetCollection);
 
-        $this->assertAssetSources(['sub1/js/standalone.js', 'sub1/js/static.js', 'sub1/js/require_wildcard.js'], $result);
+        $this->assertAssetSources(['core/js/standalone.js', 'core/js/static.js', 'core/js/require_wildcard.js'], $result);
 
         // ensure everything loads
         $result->dump();

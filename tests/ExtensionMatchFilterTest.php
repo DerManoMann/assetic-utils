@@ -20,7 +20,7 @@ class ExtensionMatchFilterTest extends AsseticTestCase
 
         // create asset
         $factory = $this->getFactory($defaultRoot = __DIR__.'/assets', [], ['jsmatch' => $jsMatchFilter]);
-        $asset = $factory->createAsset('sub1/js/standalone.js', ['jsmatch']);
+        $asset = $factory->createAsset('core/js/standalone.js', ['jsmatch']);
         $asset->dump();
         $this->assertTrue($dumperCalled);
     }
