@@ -1,19 +1,19 @@
-A loose collection of assetic workers
-=====================================
-[![Build Status](https://travis-ci.org/DerManoMann/assetic-worker.png)](https://travis-ci.org/DerManoMann/assetic-worker)
-[![Coverage Status](https://coveralls.io/repos/DerManoMann/assetic-worker/badge.png)](https://coveralls.io/r/DerManoMann/assetic-worker)
+A loose collection of assetic related code
+==========================================
+[![Build Status](https://travis-ci.org/DerManoMann/assetic-utils.png)](https://travis-ci.org/DerManoMann/assetic-utils)
+[![Coverage Status](https://coveralls.io/repos/DerManoMann/assetic-utils/badge.png)](https://coveralls.io/r/DerManoMann/assetic-utils)
 
 This [assetic](https://github.com/kriswallsmith/assetic) extension preprocesses require statements in assetic managed assets (for example JavaScript or CSS files)
 
 ## Basic Usage
 
 ## Installation
-The recommended way to install assetic-worker is [through
+The recommended way to install assetic-utils is [through
 composer](http://getcomposer.org).
 
 Install the latest version with:
 ```
-$ composer require radebatz/assetic-worker
+$ composer require radebatz/assetic-utils
 ```
 
 ## Requirements

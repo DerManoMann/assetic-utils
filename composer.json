@@ -1,7 +1,7 @@
 {
     "minimum-stability": "stable",
-    "name": "radebatz/assetic-worker",
-    "description": "Collection of assetic workers.",
+    "name": "radebatz/assetic-utils",
+    "description": "Collection of assetic related code.",
     "license": [
         "MIT"
     ],
@@ -13,8 +13,8 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/DerManoMann/assetic-worker/issues",
-        "source": "https://github.com/DerManoMann/assetic-worker.git"
+        "issues": "https://github.com/DerManoMann/assetic-utils/issues",
+        "source": "https://github.com/DerManoMann/assetic-utils.git"
     },
     "require": {
         "php": ">=5.6",
