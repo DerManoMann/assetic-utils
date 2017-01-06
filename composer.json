@@ -25,7 +25,11 @@
         "phpunit/phpunit": "~4",
         "satooshi/php-coveralls": "dev-master",
         "symfony/yaml": "~2.3|^3.0",
-        "monolog/monolog": "^1.21"
+        "monolog/monolog": "^1.21",
+        "radebatz/acache": "^1.3"
+    },
+    "suggest": {
+        "psr/cache": "^1.0"
     },
     "autoload": {
         "psr-4": {
