@@ -3,7 +3,7 @@
 namespace Radebatz\Assetic\Tests;
 
 use Assetic\Asset\AssetCollection;
-use Assetic\Cache\ArrayCache;
+use Assetic\Cache\FilesystemCache;
 use Radebatz\Assetic\Factory\Worker\CacheWorker;
 use Radebatz\Assetic\Factory\Worker\PreprocessorWorker;
 
@@ -17,7 +17,9 @@ class CacheWorkerTest extends AsseticTestCase
      */
     public function testBasic()
     {
-        $cacheWorker = new CacheWorker($cache = new ArrayCache());
+        $cacheDir = __DIR__.'/cache';
+        @mkdir($cacheDir, 0777);
+        $cacheWorker = new CacheWorker($cache = new FilesystemCache($cacheDir));
         $factory = $this->getFactory($defaultRoot = __DIR__.'/assets', [$cacheWorker]);
 
         $asset = $factory->createAsset('core/js/require.js');
@@ -29,9 +31,9 @@ class CacheWorkerTest extends AsseticTestCase
         $asset->load();
 
         // check cache is not empty
-        $rc = new \ReflectionClass($cache);
-        $rp = $rc->getProperty('cache');
-        $rp->setAccessible(true);
-        $this->assertEquals(1, count($rp->getValue($cache)));
+        $cacheFiles = glob($cacheDir.'/*');
+        $this->assertEquals(1, count ($cacheFiles));
+
+        $this->assertEquals(file_get_contents(array_pop($cacheFiles)), file_get_contents(__DIR__.'/assets/core/js/require.js'));
     }
 }
