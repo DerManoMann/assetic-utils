@@ -24,13 +24,13 @@ class WebUtils
      */
     public static function getVersionTargetPath(AssetInterface $asset, FilterInterface $additionalFilter = null, $salt = '')
     {
-        $path = VarUtils::resolve($asset->getTargetPath(), $asset->getVars(), $asset->getValues());
+        $path = VarUtils::resolve($asset->getSourcePath(), $asset->getVars(), $asset->getValues());
 
         // merge version into path
         $version = self::getAssetVersion($asset, $additionalFilter, $salt);
         $info = pathinfo($path);
 
-        $path = $info['dirname'] . DIRECTORY_SEPARATOR . $info['basename'] . '.' . $version;
+        $path = $info['dirname'] . DIRECTORY_SEPARATOR . $info['filename'] . '.' . $version;
         if ($info['extension']) {
             $path .= '.' . $info['extension'];
         }
