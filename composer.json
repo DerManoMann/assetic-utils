@@ -22,11 +22,12 @@
         "psr/log": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4",
+        "phpunit/phpunit": "~5",
         "satooshi/php-coveralls": "dev-master",
         "symfony/yaml": "~2.3|^3.0",
         "monolog/monolog": "^1.21",
-        "radebatz/acache": "^1.3"
+        "radebatz/acache": "^1.3",
+        "twig/twig": "^1.30"
     },
     "suggest": {
         "psr/cache": "^1.0"
