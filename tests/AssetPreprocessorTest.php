@@ -16,7 +16,7 @@ class AssetPreprocessorTest extends AsseticTestCase
     public function testNoStatements()
     {
         $resource = 'core/js/standalone.js';
-        $factory = $this->getFactory($defaultRoot = __DIR__.'/assets');
+        $factory = $this->getFactory($defaultRoot = $this->getAssetsPath());
         $asset = $factory->createAsset($resource);
         $asset = $this->expectSingleAsset($asset);
 
@@ -31,7 +31,7 @@ class AssetPreprocessorTest extends AsseticTestCase
     public function testRequireSingle()
     {
         $resource = 'core/js/require.js';
-        $factory = $this->getFactory($defaultRoot = __DIR__.'/assets');
+        $factory = $this->getFactory($defaultRoot = $this->getAssetsPath());
         $asset = new FileAsset(sprintf('%s/%s', $defaultRoot, $resource), [], $defaultRoot, $resource, []);
 
         $preprocessor = $this->getAssetPreprocessor();
@@ -48,7 +48,7 @@ class AssetPreprocessorTest extends AsseticTestCase
     public function testRequireSelf($factory)
     {
         $resource = 'core/js/require_self.js';
-        $defaultRoot = __DIR__.'/assets';
+        $defaultRoot = $this->getAssetsPath();
         $asset = new FileAsset(sprintf('%s/%s', $defaultRoot, $resource), [], $defaultRoot, $resource, []);
 
         $preprocessor = $this->getAssetPreprocessor();
@@ -65,7 +65,7 @@ class AssetPreprocessorTest extends AsseticTestCase
     public function testRequireMulti($factory)
     {
         $resource = 'core/js/require_multi.js';
-        $defaultRoot = __DIR__.'/assets';
+        $defaultRoot = $this->getAssetsPath();
         $asset = new FileAsset(sprintf('%s/%s', $defaultRoot, $resource), [], $defaultRoot, $resource, []);
 
         $preprocessor = $this->getAssetPreprocessor();
@@ -86,7 +86,7 @@ class AssetPreprocessorTest extends AsseticTestCase
     public function testRequireTree($factory)
     {
         $resource = 'core/js/require_tree.js';
-        $defaultRoot = __DIR__.'/assets';
+        $defaultRoot = $this->getAssetsPath();
         $asset = new FileAsset(sprintf('%s/%s', $defaultRoot, $resource), [], $defaultRoot, $resource, []);
 
         $preprocessor = $this->getAssetPreprocessor();
@@ -106,7 +106,7 @@ class AssetPreprocessorTest extends AsseticTestCase
     public function testRequireWildcard($factory)
     {
         $resource = 'core/js/require_wildcard.js';
-        $defaultRoot = __DIR__.'/assets';
+        $defaultRoot = $this->getAssetsPath();
         $asset = new FileAsset(sprintf('%s/%s', $defaultRoot, $resource), [], $defaultRoot, $resource, []);
 
         $preprocessor = $this->getAssetPreprocessor();

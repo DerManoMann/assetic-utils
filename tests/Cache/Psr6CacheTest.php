@@ -1,10 +1,11 @@
 <?php
 
-namespace Radebatz\Assetic\Tests;
+namespace Radebatz\Assetic\Tests\Cache;
 
 use Radebatz\ACache\ArrayCache;
 use Radebatz\ACache\Decorators\Psr\CacheItemPool;
 use Assetic\Cache\CacheInterface;
+use Radebatz\Assetic\Tests\AsseticTestCase;
 use Radebatz\Assetic\Cache\Psr6Cache;
 
 /**

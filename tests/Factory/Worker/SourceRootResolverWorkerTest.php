@@ -1,10 +1,11 @@
 <?php
 
-namespace Radebatz\Assetic\Tests;
+namespace Radebatz\Assetic\Tests\Factory\Worker;
 
 use Assetic\Asset\AssetCollection;
 use Assetic\Asset\FileAsset;
 use Assetic\Asset\GlobAsset;
+use Radebatz\Assetic\Tests\AsseticTestCase;
 use Radebatz\Assetic\Factory\Worker\PreprocessorWorker;
 use Radebatz\Assetic\Factory\Worker\SourceRootResolverWorker;
 
@@ -17,7 +18,7 @@ class SourceRootResolverWorkerTest extends AsseticTestCase
      */
     public function testDefaultRoot()
     {
-        $factory = $this->getFactory($defaultRoot = __DIR__.'/assets');
+        $factory = $this->getFactory($defaultRoot = $this->getAssetsPath());
 
         $asset = $factory->createAsset('core/js/standalone.js');
         $asset = $this->expectSingleAsset($asset);
@@ -30,8 +31,7 @@ class SourceRootResolverWorkerTest extends AsseticTestCase
      */
     public function testFile()
     {
-        $factory = $this->getFactory($defaultRoot = null, [new SourceRootResolverWorker(['/tmp', __DIR__.'/assets'])]);
-        $expectedRoot = __DIR__.'/assets';
+        $factory = $this->getFactory($defaultRoot = null, [new SourceRootResolverWorker(['/tmp', $expectedRoot = $this->getAssetsPath()])]);
 
         $asset = $factory->createAsset('core/js/standalone.js');
         // double nesting as the resolver uses $factory->createAsset
@@ -45,8 +45,7 @@ class SourceRootResolverWorkerTest extends AsseticTestCase
      */
     public function testGlob()
     {
-        $factory = $this->getFactory($defaultRoot = null, [new SourceRootResolverWorker(['/tmp', __DIR__.'/assets'])]);
-        $expectedRoot = __DIR__.'/assets';
+        $factory = $this->getFactory($defaultRoot = null, [new SourceRootResolverWorker(['/tmp', $expectedRoot = $this->getAssetsPath()])]);
 
         $asset = $factory->createAsset('core/js/require_*.js');
         // double nesting as the resolver uses $factory->createAsset
@@ -61,7 +60,7 @@ class SourceRootResolverWorkerTest extends AsseticTestCase
      */
     public function testComplex()
     {
-        $assetsBase = __DIR__.'/assets';
+        $assetsBase = $this->getAssetsPath();
         $factory = $this->getFactory(
             null, [
                 new SourceRootResolverWorker([

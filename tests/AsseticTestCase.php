@@ -19,6 +19,22 @@ class AsseticTestCase extends \PHPUnit_Framework_TestCase
 {
 
     /**
+     * Get the assets base path.
+     */
+    protected function getAssetsPath()
+    {
+        return __DIR__.'/Resources/assets';
+    }
+
+    /**
+     * Get the file cache path.
+     */
+    protected function getCachePath()
+    {
+        return __DIR__.'/Resources/cache';
+    }
+
+    /**
      * Get default config.
      */
     protected function getDefaultConfig()
@@ -34,7 +50,7 @@ class AsseticTestCase extends \PHPUnit_Framework_TestCase
     {
         $defaultConfig = $this->getDefaultConfig();
 
-        $root = false !== $root ? $root : __DIR__.'/assets';
+        $root = false !== $root ? $root : $this->getAssetsPath();
         $factory = new AssetFactory($root, $defaultConfig['assetic']['debug']);
         $factory->setAssetManager(new LazyAssetManager($factory));
 
@@ -58,8 +74,8 @@ class AsseticTestCase extends \PHPUnit_Framework_TestCase
     public function testFactories()
     {
         return [
-            'default' => [$this->getFactory(__DIR__.'/assets')],
-            'resolving' => [$this->getFactory(null, [new SourceRootResolverWorker(['/tmp', __DIR__.'/assets'])])],
+            'default' => [$this->getFactory($this->getAssetsPath())],
+            'resolving' => [$this->getFactory(null, [new SourceRootResolverWorker(['/tmp', $this->getAssetsPath()])])],
         ];
     }
 
