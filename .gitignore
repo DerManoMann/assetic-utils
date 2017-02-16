@@ -1,2 +1,4 @@
 composer.lock
+tests/Resources/cache/
+tests/Resources/writer/
 vendor/

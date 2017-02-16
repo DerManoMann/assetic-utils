@@ -27,6 +27,14 @@ class AsseticTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Get the writer base path.
+     */
+    protected function getWriterPath()
+    {
+        return __DIR__.'/Resources/writer';
+    }
+
+    /**
      * Get the file cache path.
      */
     protected function getCachePath()
