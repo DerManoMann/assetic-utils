@@ -4,6 +4,7 @@
   </head>
 
   <body>
+    {% image 'core/img/bruce.png' %}<img src="{{ asset_url }}" />{% endimage %}
     <a href="{{ path('home') }}">Home</a>
     <a href="{{ path('refresh-web-assets') }}">Refresh Web Assets</a>
     <a href="{{ path('process-templates') }}">Process Templates</a>
