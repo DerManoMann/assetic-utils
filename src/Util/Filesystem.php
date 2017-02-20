@@ -22,7 +22,7 @@ class Filesystem extends SymfonyFilesystem
             $resolved[] = $dir;
             while (!is_dir(dirname($dir))) {
                 $dir = dirname($dir);
-                if (in_array(['/', '.', '..'], $dir)) {
+                if (in_array($dir, ['/', '.', '..'])) {
                     break;
                 }
                 $resolved[] = $dir;
