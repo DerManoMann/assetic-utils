@@ -17,7 +17,7 @@ $ composer require radebatz/assetic-utils
 ```
 
 ## Requirements
-- Silex 2.0
+- Assetic 1.3
 - PHP 5.6
 
 
