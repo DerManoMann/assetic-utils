@@ -4,12 +4,12 @@ namespace Radebatz\Assetic\Tests\Util;
 
 use Assetic\Asset\FileAsset;
 use Radebatz\Assetic\Tests\AsseticTestCase;
-use Radebatz\Assetic\Util\WebUtils;
+use Radebatz\Assetic\Util\VersionUtils;
 
 /**
- * Test WebUtils.
+ * Test VersionUtils.
  */
-class WebUtilsTest extends AsseticTestCase
+class VersionUtilsTest extends AsseticTestCase
 {
     /**
      */
@@ -26,7 +26,7 @@ class WebUtilsTest extends AsseticTestCase
         // double check
         $this->assertTrue($asset instanceof FileAsset);
 
-        $targetPath = WebUtils::getVersionTargetPath($asset);
+        $targetPath = VersionUtils::getVersionTargetPath($asset);
 
         $this->assertTrue((bool) preg_match('#core/js/standalone\.[0-9a-z]+\.js#', $targetPath));
     }

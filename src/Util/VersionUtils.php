@@ -3,15 +3,41 @@
 namespace Radebatz\Assetic\Util;
 
 use Assetic\Asset\AssetInterface;
+use Assetic\Asset\AssetCollectionInterface;
+use Assetic\Asset\FileAsset;
 use Assetic\Filter\FilterInterface;
 use Assetic\Filter\HashableInterface;
 use Assetic\Util\VarUtils;
 
 /**
- * Collection of web utils.
+ * Collection of version related utilities.
  */
-class WebUtils
+class VersionUtils
 {
+
+    /**
+     * Set a target path based on the original asset target path and asset version key.
+     *
+     * @param AssetInterface  $asset            The asset
+     * @param FilterInterface $additionalFilter Any additional filter being applied
+     * @param string          $salt             Salt for the key
+     *
+     * @return string A versioned target path
+     */
+    public static function setVersionTargetPath(AssetInterface $asset, FilterInterface $additionalFilter = null, $salt = '')
+    {
+        if ($asset instanceof FileAsset) {
+            $asset->setTargetPath('');
+            $asset->setTargetPath(static::getVersionTargetPath($asset));
+        } elseif ($asset instanceof AssetCollectionInterface) {
+            // use first to set target path
+            $leafs = $asset->all();
+            if ($leafs) {
+                $asset->setTargetPath('');
+                $asset->setTargetPath(static::getVersionTargetPath($leafs[0]));
+            }
+        }
+    }
 
     /**
      * Get a target path based on the original asset target path and asset version key.
@@ -41,13 +67,13 @@ class WebUtils
     /**
      * Returns a version key for the given asset.
      *
-     * The key is composed of everything but an asset's content:
+     * The key is composed of everything but an asset's last modified timestamp:
      *
      *  * source root
      *  * source path
      *  * target url
-     *  * last modified
      *  * filters
+     *  * content
      *
      * @param AssetInterface  $asset            The asset
      * @param FilterInterface $additionalFilter Any additional filter being applied
@@ -65,7 +91,7 @@ class WebUtils
         $cacheKey  = $asset->getSourceRoot();
         $cacheKey .= $asset->getSourcePath();
         $cacheKey .= $asset->getTargetPath();
-        $cacheKey .= $asset->getLastModified();
+        $cacheKey .= $asset->dump();
 
         foreach ($asset->getFilters() as $filter) {
             if ($filter instanceof HashableInterface) {

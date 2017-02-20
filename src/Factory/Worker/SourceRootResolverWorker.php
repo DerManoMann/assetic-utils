@@ -84,7 +84,6 @@ class SourceRootResolverWorker implements WorkerInterface {
                         ]
                     );
                     return $asset;
-                    //return new FileAsset($filename, $asset->getFilters(), $root, $path);
                 }
             }
         }
@@ -128,13 +127,6 @@ class SourceRootResolverWorker implements WorkerInterface {
                             'root' => $sourceRoot,
                         ]
                     );
-                    /*
-                    return new GlobAsset(
-                        array_map(function ($glob) use ($sourceRoot) { return sprintf('%s/%s', $sourceRoot, ltrim($glob, '/')); }, $globs),
-                        $asset->getFilters(),
-                        $sourceRoot
-                    );
-                    */
                 }
             }
         }
