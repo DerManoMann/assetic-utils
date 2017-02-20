@@ -20,35 +20,32 @@ $app->register(new Silex\Provider\TwigServiceProvider(), [
     'twig.path' => __DIR__.'/Resources/twig',
 ]);
 
-$app->get('/', function () use ($app) {
-    return $app['twig']->render('index.twig', []);
-})->bind('home');
-
-// assetic debug
+// assetic
 $debug = false;
+$factory = new AssetFactory(__DIR__.'/Resources/assets');
+$factory->setAssetManager($am = new LazyAssetManager($factory));
+$factory->setDebug($debug);
+$app['twig']->addExtension(new AsseticExtension($factory));
 
-// use basic css - should be red!!
-$app->get('/basic/', function () use ($app) {
-    // basic factory...
-    $factory = new AssetFactory(__DIR__.'/Resources/assets');
-    $factory->setAssetManager($am = new LazyAssetManager($factory));
-    $factory->setDebug($debug);
+
+// home
+$app->get('/', function () use ($app, $factory, $am) {
     // here prefix is the (absolute) context path of the asset url
     $factory->addWorker(new VersioningWorker('/assetic-utils/tests/Resources/webassets/'));
 
-    $app['twig']->addExtension(new AsseticExtension($factory));
+    return $app['twig']->render('index.twig', []);
+})->bind('home');
 
-    $response = $app['twig']->render('basic.twig', []);
+// use basic css - should be red!!
+$app->get('/basic/', function () use ($app, $factory, $am) {
+    // here prefix is the (absolute) context path of the asset url
+    $factory->addWorker(new VersioningWorker('/assetic-utils/tests/Resources/webassets/'));
 
-    return $response;
+    return $app['twig']->render('basic.twig', []);
 })->bind('basic');
 
 // precompile listed assets
-$app->get('/refresh-web-assets/', function () use ($app) {
-    $factory = new AssetFactory(__DIR__.'/Resources/assets');
-    $factory->setAssetManager($am = new LazyAssetManager($factory));
-    $factory->setDebug($debug);
-
+$app->get('/refresh-web-assets/', function () use ($app, $factory, $am) {
     // loop through all your templates
     foreach (['fancyred' => 'plugins/fancy/css/fancy_red.css'] as $name => $resource) {
         $asset = $factory->createAsset($resource);
@@ -62,14 +59,8 @@ $app->get('/refresh-web-assets/', function () use ($app) {
 })->bind('refresh-web-assets');
 
 // precompile based on resources referenced in templates
-$app->get('/process-templates/', function () use ($app) {
-    // basic factory...
-    $factory = new AssetFactory(__DIR__.'/Resources/assets');
-    $factory->setAssetManager($am = new LazyAssetManager($factory));
-    $factory->setDebug($debug);
+$app->get('/process-templates/', function () use ($app, $factory, $am) {
     $factory->addWorker(new VersioningWorker('Resources/webassets/'));
-
-    $app['twig']->addExtension(new AsseticExtension($factory));
 
     // enable loading assets from twig templates
     $am->setLoader('twig', new TwigFormulaLoader($app['twig']));
